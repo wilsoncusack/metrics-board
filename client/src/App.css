@@ -1,0 +1,33 @@
+#header{
+	width: 100%;
+	height: 100px;
+	border-bottom: 2px black;
+}
+
+#boardButtons{
+	margin: auto;
+	margin-top: 50px;
+	width: 174px;
+}
+
+#boardChooser{
+	float: left;
+	height: 40px;
+}
+
+#newBoardButton{
+	float: left;
+	width: 40px;
+	height: 40px;
+	background-color: grey;
+	margin-left: 5px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+#newBoardButton>h1{
+	color: white;
+	font-size: 30px;
+	font-weight: bold;
+	text-align: center;
+}
