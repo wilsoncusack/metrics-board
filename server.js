@@ -263,14 +263,7 @@ app.post('/api/widget', (req, res) => {
         })
         return
       }
-      // var values;
-      // if(!req.body.values){
-      //   pool.query('INSERT INTO WIDGETS (title, board_id, event, name, type, unit, interval, limit_return) values ($1, $2, $3, $4, $5, $6, $7, $8) returning *;', [req.body.title, req.body.boardID, req.body.event, req.body.name, req.body.type, req.body.unit, req.body.interval, req.body.limitReturn], function(err, result){
-      //     if (err) return onError(err, res);
-      //     res.json(result.rows[0])
-      //   });
-      //   return
-      // }
+      
       pool.query('INSERT INTO WIDGETS (title, board_id, event, name, values, type, unit, interval, limit_return) values ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *;', [req.body.title, req.body.boardID, req.body.event, req.body.name, req.body.values, req.body.type, req.body.unit, req.body.interval, req.body.limitReturn], function(err, result){
         if (err) return onError(err, res);
         res.json(result.rows[0])
