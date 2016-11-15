@@ -14,6 +14,12 @@ var redis = require("redis")
 // const db = new sqlite.Database(filebuffer);
 
 const app = express();
+app.set('port', (process.env.PORT || 3001));
+
+// Express only serves static assets in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
+}
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser())
