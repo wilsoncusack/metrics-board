@@ -8,34 +8,54 @@ class NewBoardForm extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			name: ""
+			boardName: "",
+			visibleToAllAccount: false
 		}
 	}
 
 	handleNameChange(e){
-		this.setState({name: e.target.value})
+		this.setState({boardName: e.target.value})
 	}
 
-	createNewBoard(e) {
-	    e.preventDefault();
-	    var name = this.state.name.trim();
-	    if (!name) {
-	      return;
-	    }
-	    console.log("submit board")
-	    $('#newBoardContainer').remove()
+	backgroundClick(e){
+		if(e.target.id != "background"){
+			return
+		}
+		this.props.toggleNewBoard()
+	}
+
+	toggleVisible(){
+		this.setState({
+			visibleToAllAccount: !this.state.visibleToAllAccount
+		})
+	}
+
+	submit(){
+		var boardName = this.state.boardName.trim();
+		if(!boardName){
+			return;
+		}
+		this.props.submit({name: boardName, visibleToAllAccount: this.state.visibleToAllAccount})
 	}
 
 	render(){
 		return(
+			<div onClick={this.backgroundClick.bind(this)} id="background">
 			<div id="newBoardContainer">
-			<form id="newBoardForm" onSubmit={this.createNewBoard.bind(this)}>
 			<input 
 			type="text" 
 			placeholder="Board Name" 
 			onChange={this.handleNameChange.bind(this)}
 			/>
-			</form>
+			{this.props.accountAdmin ? 
+				<div className={this.state.visibleToAllAccount ? "selected" : "" } 
+				onClick={this.toggleVisible.bind(this)} 
+				id="visibleToAllButton"> 
+					<h3> Visible to all account </h3> 
+				</div> 
+			: ""}
+			<div id="boardSubmit" onClick={this.submit.bind(this)}> <h3> submit </h3> </div>
+			</div>
 			</div>
 			);
 	}

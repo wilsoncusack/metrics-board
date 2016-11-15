@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Login from './Login';
 import './index.css';
 import './semantic-ui/semantic.min.css';
 
 ReactDOM.render(
-  <App />,
+  <Login />,
   document.getElementById('root')
 );
