@@ -5,32 +5,35 @@ I built this because the metrics boards I wanted to use were too expensive. It's
 To get it working:
 If you're already setup on Heroku, skip these steps
 
-1. Sign up on [Heroku](http://heroku.com/)
-2. Download the [Heroku Toolbelt](https://devcenter.heroku.com/articles/heroku-command-line)
+Sign up on [Heroku](http://heroku.com/)
+Download the [Heroku Toolbelt](https://devcenter.heroku.com/articles/heroku-command-line)
 
 Then
 
-3. Clone the repo
+Clone the repo
 ```
 git clone https://github.com/wilsoncusack/metrics-board.git
 ```
-4. Change directory into the app and create a heroku app 
+Change directory into the app and create a heroku app 
 ```
 cd metrics-board
 heroku apps:create food-lookup-demo
 ```
-5. Provision a Postgres Database
+
+Provision a Postgres Database
 ```
 heroku addons:create heroku-postgresql:hobby-dev
 ```
 (more info [here](https://devcenter.heroku.com/articles/heroku-postgresql#provisioning-the-add-on))
-6. Provision a Redis Database
+
+Provision a Redis Database
 ```
 heroku plugins:install heroku-redis
 heroku addons:create heroku-redis:hobby-dev -a sushi
 ```
 (more info [here](https://devcenter.heroku.com/articles/heroku-redis))
-7. Write the credentials to your enviroment
+
+Write the credentials to your enviroment
 ```
 echo REDIS_URL=\"$(heroku redis:credentials)\" >> env.sh
 echo $(DATABASE_URL='postgres://oehcpzebfrcryr:nfbS8geOYRA7g6fu2PRMqqrGvG@ec2-54-227-250-80.compute-1.amazonaws.com:5432/d3qjphmo39tjre') >> env.sh
