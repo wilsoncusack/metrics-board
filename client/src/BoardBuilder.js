@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import './NewBoard.css';
+import './styles/BoardBuilder.css';
 
 
 
-class NewBoardForm extends Component {
+class BoardBuilder extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -20,7 +20,7 @@ class NewBoardForm extends Component {
 		if(e.target.id !== "background"){
 			return
 		}
-		this.props.toggleNewBoard()
+		this.props.toggleBoardBuilder()
 	}
 
 	toggleVisible(){
@@ -40,8 +40,8 @@ class NewBoardForm extends Component {
 	render(){
 		return(
 			<div onClick={this.backgroundClick.bind(this)} id="background">
-			<div id="newBoardContainer">
-			<input id="newBoardInput"
+			<div id="boardBuilderContainer">
+			<input id="boardNameInput"
 			type="text" 
 			placeholder="Board Name" 
 			onChange={this.handleNameChange.bind(this)}
@@ -64,4 +64,4 @@ class NewBoardForm extends Component {
 
 
 
-export default NewBoardForm;
+export default BoardBuilder;

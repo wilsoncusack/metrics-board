@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import Board from './Board';
-import NewBoardForm from './NewBoard';
+import BoardBuilder from './BoardBuilder';
 import $ from 'jquery';
-import './App.css';
+import './styles/App.css';
 
 class Header extends Component {
-
-	renderNewBoardForm(){
-		this.props.toggleNewBoard()
-	}
 
 	render() {
 		var boardChoices = this.props.boards.map(function(boardDict){
@@ -25,7 +21,7 @@ class Header extends Component {
 			<select id="boardChooser" value={this.props.selected} onChange={this.props.changeSelection}>
 			{boardChoices}
 			</select>
-			<div onClick={this.props.toggleNewBoard} id="newBoardButton"> <h1> + </h1> </div>
+			<div onClick={this.props.toggleBoardBuilder} id="newBoardButton"> <h1> + </h1> </div>
 			</div>
 
 
@@ -63,7 +59,6 @@ class App extends Component {
 	}
 
 	getEventNames(){
-		console.log("in event name")
 		$.ajax({
 			url: "https://mixpanel.com/api/2.0/events/names/",
 			beforeSend: function (xhr) {
@@ -83,7 +78,6 @@ class App extends Component {
 	buildDisplayWidget(data, widget){
 		var values = data.data.values[widget.event];
 		var aKeys = Object.keys(values);
-		console.log(aKeys)
 		var aData = [];
 		var len = aKeys.length;
 		for(var i = 0; i < len; i++){
@@ -103,8 +97,7 @@ class App extends Component {
 			value: thisPeriodValue,
 			change: change,
 		}
-		// console.log(displayWidget)
-		// return displayWidget
+
 		var temp = this.state.widgets
 		temp.push(displayWidget)
 		var temp2 = this.state.widgetsCache;
@@ -117,7 +110,6 @@ class App extends Component {
 	}
 
 	getWidgetWithProperty(widget){
-		console.log("getting widget with property")
 		$.ajax({
 			url: "https://mixpanel.com/api/2.0/events/properties/",
 			beforeSend: function (xhr) {
@@ -143,9 +135,7 @@ class App extends Component {
 	}
 
 	getWidgetsData(widget){
-		console.log(widget.name)
 		if(!!widget.name){
-			console.log("IN ALT")
 			this.getWidgetWithProperty(widget)
 		}
 		$.ajax({
@@ -170,8 +160,6 @@ class App extends Component {
 
 	getWidgets(selection){
 		if(!!this.state.widgetsCache[selection]){
-			console.log("used cache!")
-			console.log(!this.state.widgetsCache[selection])
 			this.setState({
 				widgets: this.state.widgetsCache[selection]
 			})
@@ -208,7 +196,7 @@ class App extends Component {
 		this.state = {
 			boards: [],
 			selection: 2,
-			showNewBoard: false,
+			showBoardBuilder: false,
 			boardsDict: {},
 			widgets: [],
 			eventNames: [],
@@ -227,7 +215,7 @@ class App extends Component {
 			dataType: 'json',
 			data: board,
 			success: function(data) {
-				$('#background').remove()
+				this.toggleBoardBuilder()
 				var boards = this.state.boards;
 				boards.push(data)
 				var boardsDict = this.state.boardsDict
@@ -265,7 +253,6 @@ class App extends Component {
 	}
 
 	changeBoardByID(id){
-		console.log("selection " + id)
 		if(!id){
 			return;
 		}
@@ -276,25 +263,23 @@ class App extends Component {
 	}
 
 	changeBoard(e){
-		console.log("changing")
 		this.changeBoardByID(this.state.boardsDict[e.target.value]);
-		
 	}
 
-	toggleNewBoard(){
+	toggleBoardBuilder(){
 		this.setState({
-			showNewBoard: !this.state.showNewBoard
+			showBoardBuilder: !this.state.showBoardBuilder
 		})
 	}
 
 	render() {
 		return(
 			<div>
-			<Header boards={this.state.boards} selected={this.state.selected} changeSelection={this.changeBoard.bind(this)} toggleNewBoard={this.toggleNewBoard.bind(this)}/>
-			{this.state.showNewBoard ? 
-				<NewBoardForm 
+			<Header boards={this.state.boards} selected={this.state.selected} changeSelection={this.changeBoard.bind(this)} toggleBoardBuilder={this.toggleBoardBuilder.bind(this)}/>
+			{this.state.showBoardBuilder ? 
+				<BoardBuilder 
 				accountAdmin={this.props.accountAdmin} 
-				toggleNewBoard={this.toggleNewBoard.bind(this)}
+				toggleBoardBuilder={this.toggleBoardBuilder.bind(this)}
 				submit={this.submitNewBoard.bind(this)}/> 
 				: ""}
 				<Board eventNames={this.state.eventNames} 

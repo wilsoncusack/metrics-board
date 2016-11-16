@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-// import './Login.css';
 import App from './App';
 
 class LoginForm extends Component {

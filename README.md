@@ -10,7 +10,7 @@ https://github.com/brianc/node-postgres/wiki/Example
 To Do:
 - [ ] Add ability to edit/delete widgets
 - [ ] Add more integrations (right now only mixpanel)
-- [ ] Add more widgets/display options (like graphs)
+- [ ] Add more widgets/display options (like graphs). Will also then need to add widget type to the widget table in the db.
 - [ ] Add ability to compute formulas
 - [ ] Drag and drop UI
 - [ ] Add ability to create an account, client side
