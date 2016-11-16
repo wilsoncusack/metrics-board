@@ -115,11 +115,15 @@ var usernameAvaliable = function(username){
 var login = function(userID, accountID, accountAdmin, res){
   pool.query('SELECT mixpanel_api_secret FROM accounts WHERE id = $1;', [accountID], function(err, result){
     if (err) return onError(err, res);
-    console.log(result)
     var mixpanelAPISecret = result.rows[0].mixpanel_api_secret;
     getToken(function(token){
-      res.cookie("token", token, {maxAge: 86400000}); // one day
-      rClient.hmset(token, "user_id", userID, "account_id", accountID, "account_admin", accountAdmin, "mixpanel_api_secret", mixpanelAPISecret)
+      rClient.multi([
+        ["hmset", token, "user_id", userID, "account_id", accountID, "account_admin", accountAdmin, "mixpanel_api_secret", mixpanelAPISecret],
+        ["expire", token, 86400000]
+        ]).exec(function (err, replies) {
+          if (err) return onError(err, res);
+        });
+      res.cookie("token", token, {maxAge: 86400000});
       res.json({
         userID: userID,
         accountID: accountID,
@@ -136,8 +140,6 @@ app.post('/api/user', upload.array(), (req, res) => {
   var password =  req.body.password;
   var accountID =  req.body.accountID;
   var accountAdmin =  req.body.accountAdmin;
-  console.log(session[req.cookies.token])
-
 
   if(!username || !password || !accountID || !accountAdmin){
     res.json({
@@ -175,8 +177,11 @@ app.post('/api/user', upload.array(), (req, res) => {
 var getUser = function(token, callback){
   rClient.hgetall(token, function (err, obj) {
     if(err){
-      console.log("error in get user " + err);
-      return null;
+      callback(null);
+      return;
+    } else if (obj == null){
+      callback(null);
+      return;
     }
     callback({
       user_id: parseInt(obj.user_id),
@@ -187,26 +192,29 @@ var getUser = function(token, callback){
   });
 }
 
-app.post('/api/login', (req, res) => {
-  if(!req.cookies.token){
-    var username = req.body.username;
-    var password =  req.body.password;
+var loginFromSession = function(user, res){
+  res.json({
+    userID: user.user_id,
+    accountID: user.account_id,
+    accountAdmin: user.account_admin,
+    mixpanelAPISecret: user.mixpanel_api_secret
+  })
+}
 
-    if(!username || !password){
-      res.json({
-        error: "Missing required parameter"
-      })
-      return;
-    }
-
-    pool.query('SELECT id, password, account_admin, account_id FROM users WHERE username = $1;', [username], function(err, result){
-      if (err) return onError(err, res);
-      var dict = result.rows[0]
-      bcrypt.compare(password, dict.password, function(err, bres) {
-        if(bres){
-          login(dict.id, dict.account_id, dict.account_admin, res)
-        // delete dict.password
-        // newRes.send(dict)
+var loginFromUserPass = function(username, password, res){
+  if(!username || !password) {
+    res.json({
+      error: "Missing required parameter"
+    })
+    return;
+  }
+  pool.query('SELECT id, password, account_admin, account_id FROM users WHERE username = $1;', [username], function(err, result){
+    if (err) return onError(err, res);
+    var dict = result.rows[0]
+    bcrypt.compare(password, dict.password, function(err, bres) {
+      if(bres){
+        login(dict.id, dict.account_id, dict.account_admin, res)
+        return;
       } else {
         res.json({
           error: "Incorrect password"
@@ -214,18 +222,26 @@ app.post('/api/login', (req, res) => {
       }
       return
     });
+  });
+}
+
+app.post('/api/login', (req, res) => {
+  const username = req.body.username;
+  const password =  req.body.password;
+
+  if(req.cookies.token){
+    getUser(req.cookies.token, user => {
+      if(user){
+        loginFromSession(user, res)
+        return;
+      } else {
+        loginFromUserPass(user, password);
+        return;
+      } 
     });
   } else {
-    getUser(req.cookies.token, user => {
-      res.json({
-        userID: user.user_id,
-        accountID: user.account_id,
-        accountAdmin: user.account_admin,
-        mixpanelAPISecret: user.mixpanel_api_secret
-      })
-    });
+    loginFromUserPass(username, password, res);
   }
-
 });
 
 
@@ -308,9 +324,7 @@ app.post('/api/board', (req, res) => {
   getUser(req.cookies.token, (user) => {
     if(!user) {res.json({"Error": "unauthorized"}); return}
     const owner = user.user_id
-    console.log(!!req.body.visibleToAllAccount)
     const visibleToAllAccount = (user.account_admin && req.body.visibleToAllAccount)
-    console.log(visibleToAllAccount)
 
     if (!boardName) {
       res.json({

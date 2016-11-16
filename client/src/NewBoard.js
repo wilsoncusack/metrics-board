@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './NewBoard.css';
-import $ from 'jquery';
 
 
 
@@ -18,7 +17,7 @@ class NewBoardForm extends Component {
 	}
 
 	backgroundClick(e){
-		if(e.target.id != "background"){
+		if(e.target.id !== "background"){
 			return
 		}
 		this.props.toggleNewBoard()

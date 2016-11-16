@@ -34,7 +34,8 @@ class NewWidgetModule extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			properties: [],
+			properties: [], // kind of a misnomer, this is indeed an array of properties, but we refer to this by "name" when 
+							// sending to the mixpanel API
 			valuesChoices:[],
 
 			title: "",
@@ -42,15 +43,12 @@ class NewWidgetModule extends Component {
 			name: "",
 			type: "general",
 			unit: "day",
-			values: "", // should allow multiple in the future
-			interval: 1,
+			values: "", // TODO: should allow multiple in the future, mixpanel takes an array
+			interval: 2, // TODO: not currently allowing people to edit this
 			limit: "255"
 		}
 	}
 
-	titleChange(e){
-		this.setState({title: e.target.value})
-	}
 
 	getValues(event, name){
 		console.log("in event name")
@@ -94,6 +92,10 @@ class NewWidgetModule extends Component {
 		});
 	}
 
+	titleChange(e){
+		this.setState({title: e.target.value})
+	}
+
 	eventChange(e){
 		this.setState({event: e.target.value})
 		this.getProperties(e.target.value)
@@ -129,7 +131,7 @@ class NewWidgetModule extends Component {
 	}
 
 	backgroundClick(e){
-		if(e.target.id != "background"){
+		if(e.target.id !== "background"){
 			return
 		}
 		this.props.toggleVisible()
@@ -141,7 +143,7 @@ class NewWidgetModule extends Component {
 		var event = this.state.event
 		var limit = parseInt(this.state.limit.trim())
 		var name = this.state.name;
-		if(this.state.name == ""){
+		if(this.state.name === ""){
 			name = null;
 		}
 		var type = this.state.type;
@@ -154,7 +156,7 @@ class NewWidgetModule extends Component {
 		}
 		
 		var interval;
-		if(unit === "month"){ interval =  2; } else { interval = this.state.interval };
+		if(unit === "day"){ interval =  1; } else { interval = this.state.interval };
 		if(!title || !limit){
 			return;
 		}

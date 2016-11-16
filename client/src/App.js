@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import Board from './Board';
 import NewBoardForm from './NewBoard';
 import $ from 'jquery';
@@ -93,7 +92,7 @@ class App extends Component {
 		var thisPeriodValue = aData[0]
 		var previousPeriodValue = aData[1]
 		var change; 
-		if((thisPeriodValue - previousPeriodValue) == 0) {
+		if((thisPeriodValue - previousPeriodValue) === 0) {
 			change = 0;
 		} else {
 			change = Math.round(((thisPeriodValue - previousPeriodValue)/previousPeriodValue) * 100)
@@ -139,7 +138,7 @@ class App extends Component {
 			}.bind(this),
 			error: function(xhr, status, err) {
 				console.error(err.toString());
-			}.bind(this)
+			}
 		});
 	}
 
@@ -165,7 +164,7 @@ class App extends Component {
 			}.bind(this),
 			error: function(xhr, status, err) {
 				console.error(err.toString());
-			}.bind(this)
+			}
 		});
 	}
 
