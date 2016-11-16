@@ -58,7 +58,6 @@ class Login extends Component {
   handleLoginSubmit(login){
     $.ajax({
       url: "/api/login",
-      // url: "http://localhost:5000/2LsYxrXd4K2B2bXTZZGMn4LkW4fH81Xh7qXGkytm8Bk=/admin/login",
       xhrFields: {
         withCredentials: true
       },
@@ -88,6 +87,8 @@ class Login extends Component {
     return (
       <div className="login">
       <LoginForm onLoginSubmit={this.handleLoginSubmit.bind(this)} />
+      <p> username = 'test' </p>
+      <p> password = 'test' </p>
       </div>
       );
   }

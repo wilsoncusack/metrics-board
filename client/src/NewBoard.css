@@ -21,7 +21,15 @@
 	margin-left: -30%;
 	/*box-shadow: 2px 2px 2px 2px grey;*/
 	background-color: white;
+	text-align: center;
 	
+}
+
+#newBoardInput{
+	border: none;
+	border-bottom: 2px solid black;
+	font-size: 20px;
+	margin-top: 50px;
 }
 
 
@@ -31,8 +39,18 @@
 	width: 200px;
 	text-align: center;
 	cursor: pointer;
+	margin: auto;
+	margin-top: 20px;
+}
+
+#visibleToAllButton>h3{
+	font-size: 15px;
 }
 
 .selected{
 	background-color: yellow;
+}
+
+#boardSubmit{
+	cursor: pointer;
 }

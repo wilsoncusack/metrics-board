@@ -41,7 +41,7 @@ class NewBoardForm extends Component {
 		return(
 			<div onClick={this.backgroundClick.bind(this)} id="background">
 			<div id="newBoardContainer">
-			<input 
+			<input id="newBoardInput"
 			type="text" 
 			placeholder="Board Name" 
 			onChange={this.handleNameChange.bind(this)}
@@ -50,7 +50,7 @@ class NewBoardForm extends Component {
 				<div className={this.state.visibleToAllAccount ? "selected" : "" } 
 				onClick={this.toggleVisible.bind(this)} 
 				id="visibleToAllButton"> 
-					<h3> Visible to all account </h3> 
+					<h3> visible to all account </h3> 
 				</div> 
 			: ""}
 			<div id="boardSubmit" onClick={this.submit.bind(this)}> <h3> submit </h3> </div>

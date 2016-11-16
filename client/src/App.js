@@ -190,8 +190,8 @@ class App extends Component {
 				// var dayMetrics = data.filter(function(widget) { return widget.unit === "day"})
 				// var weekMetrics = data.filter(function(widget) { return widget.unit === "week"})
 				// var monthMetrics = data.filter(function(widget) { return widget.unit === "month"})
-				// ^ this isn't working, because the type might be different, but we should cluster
-				// by unit and type
+				// ^ TODO: this isn't working, because the type might be different, but we should cluster
+				// by unit and type to save requests to mixpanel
 
 				data.map(this.getWidgetsData.bind(this))
 				// this.setState({widgets: widgets})
@@ -206,7 +206,6 @@ class App extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			// boards: [],
 			boards: [],
 			selection: 2,
 			showNewBoard: false,

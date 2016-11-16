@@ -235,7 +235,7 @@ app.post('/api/login', (req, res) => {
         loginFromSession(user, res)
         return;
       } else {
-        loginFromUserPass(user, password);
+        loginFromUserPass(username, password, res);
         return;
       } 
     });
