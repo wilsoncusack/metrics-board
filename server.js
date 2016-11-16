@@ -105,10 +105,12 @@ app.post('/api/account', upload.array(), (req, res) => {
   });
 })
 
-var usernameAvaliable = function(username){
+var usernameAvaliable = function(username, callback){
   pool.query('SELECT COUNT(*) FROM users WHERE username=$1;', [username], function(err, result) {
     if (err) return onError(err, res);
-    return (result.rows[0].count == 0)
+    console.log(result.rows)
+    console.log(result.rows[0].count === "0")
+    callback(result.rows[0].count === "0")
   });
 }
 
@@ -123,15 +125,15 @@ var login = function(userID, accountID, accountAdmin, res){
         ]).exec(function (err, replies) {
           if (err) return onError(err, res);
         });
-      res.cookie("token", token, {maxAge: 86400000});
-      res.json({
-        userID: userID,
-        accountID: accountID,
-        accountAdmin: accountAdmin,
-        mixpanelAPISecret: mixpanelAPISecret
-      })
-      res.send()
-    });
+        res.cookie("token", token, {maxAge: 86400000});
+        res.json({
+          userID: userID,
+          accountID: accountID,
+          accountAdmin: accountAdmin,
+          mixpanelAPISecret: mixpanelAPISecret
+        })
+        res.send()
+      });
   });
 }
 
@@ -147,31 +149,32 @@ app.post('/api/user', upload.array(), (req, res) => {
     })
     return;
   }
-
-  if(!usernameAvaliable(username)){
-    res.json({
-      error: "Username taken"
-    })
-    return;
-  }
-
-  bcrypt.hash(password, 10, function(err, hash) {
-    if(err){
-      console.log(err.message)
+  usernameAvaliable(username, available => {
+    console.log(available)
+    if(!available){
       res.json({
-        error: "Error" + err.message
+        error: "Username taken"
       })
-      return
+      return;
     }
 
-    pool.query('INSERT INTO users (username, password, account_id, account_admin) VALUES ($1, $2, $3, $4) returning id', [username, hash, accountID, accountAdmin], function(err, result) {
-      if (err) return onError(err, res);
-      var userID = result.rows[0].id
-      var newRes = login(userID, accountID, accountAdmin, res)
-      newRes.json(result.rows[0])
+    bcrypt.hash(password, 10, function(err, hash) {
+      if(err){
+        console.log(err.message)
+        res.json({
+          error: "Error" + err.message
+        })
+        return
+      }
 
-    });     
-  });
+      pool.query('INSERT INTO users (username, password, account_id, account_admin) VALUES ($1, $2, $3, $4) returning id', [username, hash, accountID, accountAdmin], function(err, result) {
+        if (err) return onError(err, res);
+        var userID = result.rows[0].id
+        login(userID, accountID, accountAdmin, res)
+
+      });     
+    });
+  })
 })
 
 var getUser = function(token, callback){
