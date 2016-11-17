@@ -36,7 +36,7 @@ heroku addons:create heroku-redis:hobby-dev -a sushi
 Write the credentials to your enviroment
 ```
 echo REDIS_URL=\"$(heroku redis:credentials)\" >> env.sh
-echo $(DATABASE_URL='postgres://oehcpzebfrcryr:nfbS8geOYRA7g6fu2PRMqqrGvG@ec2-54-227-250-80.compute-1.amazonaws.com:5432/d3qjphmo39tjre') >> env.sh
+echo $(heroku config -s | grep DATABASE_URL) >> env.sh
 source env.sh
 ```
 
