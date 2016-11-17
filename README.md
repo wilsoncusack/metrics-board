@@ -17,26 +17,24 @@ git clone https://github.com/wilsoncusack/metrics-board.git
 Change directory into the app and create a heroku app 
 ```
 cd metrics-board
-heroku apps:create food-lookup-demo
+heroku apps:create your-app-name
 ```
 
 Provision a Postgres Database
 ```
 heroku addons:create heroku-postgresql:hobby-dev
 ```
-(more info [here](https://devcenter.heroku.com/articles/heroku-postgresql#provisioning-the-add-on))
+(More info [here](https://devcenter.heroku.com/articles/heroku-postgresql#provisioning-the-add-on))
 
 Provision a Redis Database
 ```
 heroku plugins:install heroku-redis
-heroku addons:create heroku-redis:hobby-dev -a sushi
+heroku addons:create heroku-redis:hobby-dev -a your-app-name
 ```
-(more info [here](https://devcenter.heroku.com/articles/heroku-redis))
+(This will require a credit card, but you won't be billed below a certain usage. More info [here](https://devcenter.heroku.com/articles/heroku-redis))
 
 Write the credentials to your enviroment
 ```
-echo $(heroku config -s | grep REDIS_URL) >> env.sh
-echo $(heroku config -s | grep DATABASE_URL) >> env.sh
 source env.sh
 ```
 
