@@ -62,7 +62,7 @@ To add a user, with the server running, cURL (sorry there isn't a better way yet
 ```
 curl --data "username=YOUR-USERNAME&password=YOUR-PASSWORD&accountID=1&accountAdmin=true" localhost:3001/api/user
 ```
-Account ID should be one, unless you already created one some other way.
+Account ID should be 1, unless you already created an account some other way.
 
 To deploy, first build
 ```
@@ -90,7 +90,10 @@ New to React, so I'm sure I'm not using it well.
 New to Node, so I closely followed PG pool example
 https://github.com/brianc/node-postgres/wiki/Example
 
+Note: the demo site is insecure, so you should not use sensitive data on it. 
+
 To Do:
+- [ ] Add account invite/new authentication. Right now anyone can add themselves to an account via a cURL request. 
 - [ ] Add ability to edit/delete widgets
 - [ ] Add more integrations (right now only mixpanel)
 - [ ] Add more widgets/display options (like graphs). Will also then need to add widget type to the widget table in the db.
